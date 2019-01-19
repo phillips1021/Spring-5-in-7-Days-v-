@@ -38,6 +38,7 @@ public class HomeController {
 	public ResponseEntity<?> create(@RequestBody User user,UriComponentsBuilder uCB) {
 		service.createUser(user);
 		UriComponents uc = uCB.path("/{id}").buildAndExpand(user.getUserId());
+		var test = "test";
 		return ResponseEntity.created(uc.toUri()).build();
 	}
 
