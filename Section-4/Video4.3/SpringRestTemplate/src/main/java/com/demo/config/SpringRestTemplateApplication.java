@@ -46,36 +46,48 @@ public class SpringRestTemplateApplication {
 	void getMethods(RestTemplate restTemplate){
 		int id=1;
 		User user = restTemplate.getForObject("http://localhost:8080/SpringBootRest/{id}", User.class,id);
-		System.out.println(user.toString());
+		System.out.println("User found using getForObject with id value of " + id + " is " + user.toString());
+
+		var result = user.toString().isBlank();
 		
 		Map<String, String> urlVariables = new HashMap<String, String>();
 		urlVariables.put("id", "1");
 		ResponseEntity<User> response= restTemplate.getForEntity("http://localhost:8080/SpringBootRest/{id}", User.class,urlVariables);
 		if(response.getStatusCode() == HttpStatus.OK){
-			System.out.println(response.getBody());
+			System.out.println("ResponseEntity returned when using getForEntity with id value of " + id + " is " + response.getBody());
 		}
 	}
 	
 	void putMethod(RestTemplate restTemplate){
 		User user=new User();
-		user.setUserName("Joker");
+		user.setUserName("Batman");
 		user.setUserId(1);
 		user.setPhone("1234567890");
 		String url = "http://localhost:8080/SpringBootRest/update/";
 		restTemplate.put(URI.create(url), user);
+		int id=1;
+		User userFound = restTemplate.getForObject("http://localhost:8080/SpringBootRest/{id}", User.class,id);
+		System.out.println("User found using getForObject with id value of " + id + " is " + userFound.toString());
+
 	}
-	
+
+	//BEFORE running this method set user id value to unique value
 	void postMethods(RestTemplate restTemplate){
 		User user=new User();
-		user.setUserId(2);
+		user.setUserId(4);
 		user.setUserName("newUser");
 		user.setPhone("0987654321");
 		
-		//restTemplate.postForObject("http://localhost:8080/SpringBootRest/create/", user, User.class);
-		URI location=restTemplate.postForLocation("http://localhost:8080/SpringBootRest/create/", user);
-		if(location!=null){
-			System.out.println(location.toString());
-		}
+		restTemplate.postForObject("http://localhost:8080/SpringBootRest/create/", user, User.class);
+
+		int id=4;
+		User userFound = restTemplate.getForObject("http://localhost:8080/SpringBootRest/{id}", User.class,id);
+		System.out.println("User found using getForObject with id value of " + id + " is " + userFound.toString());
+
+//		URI location=restTemplate.postForLocation("http://localhost:8080/SpringBootRest/create/", user);
+//		if(location!=null){
+//			System.out.println(location.toString());
+//		}
 	}
 	
 	void deleteMethod(RestTemplate restTemplate){
